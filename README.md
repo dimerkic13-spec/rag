@@ -9,6 +9,7 @@
 - [Статус проекта](PROJECT_STATUS.md) и [список задач](TASKS.md)
 - [Предварительная архитектура](docs/architecture.md) и [журнал решений](docs/DECISIONS.md)
 - [Правила работы Codex](AGENTS.md) и [журнал изменений](CHANGELOG.md)
+- [Реестр документации](docs/document-registry.md)
 - [Шаблон локального окружения](.env.example)
 
 ## Как будет работать бот
