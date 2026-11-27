@@ -23,6 +23,8 @@ Windows 11 — согласованная ОС разработки. Docker Desk
 - [PR #3](https://github.com/dimerkic13-spec/rag/pull/3) — реестр RAG-003.
 - RAG-004 — [матрица совместимости](docs/compatibility.md) и офлайн-проверки. Команда `python scripts/check_offline.py` прошла на Python 3.13.5 в Linux. Workflow для Windows добавлен, плановый запуск требует наличия файла в основной ветке.
 
+- [PR #4](https://github.com/dimerkic13-spec/rag/pull/4) — совместимость и Windows workflow. [Первый запуск GitHub Actions](https://github.com/dimerkic13-spec/rag/actions/runs/46041691370). Подготовлены [контрольные сценарии пилота](docs/pilot-quality-cases.md), исполнение ожидает работающей интеграции.
+
 ## Следующая точка продолжения
 
 - RAG-004 — сверить критерии с утверждённым ТЗ, подтвердить версии и прогнать интеграционные проверки в Windows 11 / WSL 2 с согласованными сервисами.
