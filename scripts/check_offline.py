@@ -1,5 +1,6 @@
 """Run repository checks without credentials or external services."""
 
+import os
 import subprocess
 import sys
 from pathlib import Path
@@ -14,8 +15,9 @@ def main():
         ("scripts/check_registry.py", "examples/pilot_catalog.csv"),
         ("-m", "unittest", "discover", "-s", "tests/unit", "-v"),
     )
+    env = {**os.environ, "PYTHONIOENCODING": "utf-8"}
     for arguments in checks:
-        result = subprocess.run([sys.executable, *arguments], cwd=ROOT)
+        result = subprocess.run([sys.executable, *arguments], cwd=ROOT, env=env)
         if result.returncode:
             return result.returncode
     return 0
