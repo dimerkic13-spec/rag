@@ -1,10 +1,44 @@
 {
   "environment": "Codex Debian 13.7 x86_64",
-  "limits": {"cpu_quota": 2, "ram_gib": 8, "initial_free_disk_gib": 7.5},
-  "docker": {"engine": "29.9.2", "compose": "2.40.3", "requires_network_permission": true},
-  "verified": ["Docker hello-world", "busybox volume write and read in separate containers", "PyPI wheel download", "loopback HTTP", "Dify Web 1.9.2 /install HTTP 200", "compose config with external storage", "startup rejects missing external service settings"],
-  "mock_http": ["private dataset creation", "document submission", "363-segment paginated verification", "resume", "content mismatch rejection"],
-  "live_pilot": {"indexed_segments": null, "page_7": "not_run", "page_88": "not_run", "abstention": "not_run", "webchat_pdf_links": "not_run"},
-  "blockers": ["approved database and cache services unavailable", "model access unavailable", "private PDF and Web Chat endpoints unavailable"],
-  "public_webchat": false
+  "limits": {
+    "cpu_quota": 2,
+    "ram_gib": 8,
+    "initial_free_disk_gib": 7.5
+  },
+  "docker": {
+    "engine": "29.9.2",
+    "compose": "2.40.3",
+    "requires_network_permission": true
+  },
+  "verified": [
+    "Docker hello-world",
+    "busybox volume write and read in separate containers",
+    "PyPI wheel download",
+    "loopback HTTP",
+    "Dify Web 1.9.2 /install HTTP 200",
+    "compose config with external storage",
+    "startup rejects missing external service settings"
+  ],
+  "mock_http": [
+    "private dataset creation",
+    "document submission",
+    "363-segment paginated verification",
+    "resume",
+    "content mismatch rejection",
+    "three synthetic chat-messages HTTP responses, request headers, blocking mode and independent conversations"
+  ],
+  "live_pilot": {
+    "indexed_segments": null,
+    "page_7": "not_run",
+    "page_88": "not_run",
+    "abstention": "not_run",
+    "webchat_pdf_links": "not_run"
+  },
+  "blockers": [
+    "approved database and cache services unavailable",
+    "model access unavailable",
+    "private PDF and Web Chat endpoints unavailable"
+  ],
+  "public_webchat": false,
+  "postgres_pro_repository_anonymous_http": 401
 }
