@@ -1,4 +1,38 @@
-/data/
 /.venv/
 __pycache__/
 .env
+
+# Local secrets and environment files
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.pfx
+credentials.json
+secrets.json
+secrets/
+
+# Virtual environments and Python caches
+.venv/
+venv/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Local documents, derived data, databases and reports
+*.[pP][dD][fF]
+/data/**
+!/data/raw/
+!/data/processed/
+!/data/registry/
+!/data/*/.gitkeep
+/reports/*
+!/reports/.gitkeep
+*.db
+*.db-*
+*.sqlite
+*.sqlite-*
+*.sqlite3
+*.sqlite3-*
