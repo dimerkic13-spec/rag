@@ -1,0 +1,19 @@
+services:
+  db:
+    profiles: !override [bundled-db-disabled]
+  redis:
+    profiles: !override [bundled-cache-disabled]
+  api:
+    depends_on: !reset {}
+  worker:
+    depends_on: !reset {}
+  worker_beat:
+    depends_on: !reset {}
+  plugin_daemon:
+    depends_on: !reset {}
+    ports: !reset []
+  nginx:
+    image: nginx@sha256:8eb04fe3b385090e9aa02961f77398ad09b6bf33ab07f6669a5bb7acce22c0d3
+    ports: !override ["127.0.0.1:8080:80"]
+  ssrf_proxy:
+    image: ubuntu/squid@sha256:6a097f68bae708cedbabd6188d68c7e2e7a38cedd05a176e1cc0ba29e3bbe029
