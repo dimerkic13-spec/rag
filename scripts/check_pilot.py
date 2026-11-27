@@ -24,9 +24,10 @@ class NoRedirect(HTTPRedirectHandler):
 
 
 def validate_config(config):
-    for key in ("base_url", "source_url", "dataset_id", "document_id", "document", "version"):
-        if not isinstance(config.get(key), str) or not config[key].strip():
-            raise ValueError(f"Заполните поле {key}.")
+    fields = ("base_url", "source_url", "dataset_id", "document_id", "document", "version")
+    missing = [k for k in fields if not isinstance(config.get(k), str) or not config[k].strip()]
+    if missing:
+        raise ValueError("Заполните поля: " + ", ".join(missing))
     for key in ("base_url", "source_url"):
         url = urlsplit(config[key])
         local_http = url.scheme == "http" and url.hostname in {"localhost", "127.0.0.1", "::1"}
@@ -86,7 +87,8 @@ def evaluate(raw, case, config):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--config", type=Path, required=True)
-    parser.add_argument("--report", type=Path, required=True)
+    parser.add_argument("--report", type=Path)
+    parser.add_argument("--preflight", action="store_true", help="Check local settings without contacting Dify")
     args = parser.parse_args()
     try:
         config = json.loads(args.config.read_text(encoding="utf-8-sig"))
@@ -94,6 +96,13 @@ def main():
         key = os.environ.get("DIFY_API_KEY", "").strip()
         if not key:
             raise ValueError("Передайте DIFY_API_KEY через окружение.")
+        if args.preflight:
+            if not os.environ.get("DIFY_KNOWLEDGE_API_KEY", "").strip():
+                raise ValueError("Передайте DIFY_KNOWLEDGE_API_KEY через окружение для индексации.")
+            print("Local configuration present; remote permissions unverified.")
+            return 0
+        if args.report is None:
+            parser.error("--report is required for a live run")
         results = []
         for case in CASES:
             try:
