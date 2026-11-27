@@ -1,0 +1,8 @@
+{
+  "base_url": "https://dify.example.invalid/v1",
+  "source_url": "https://docs.example.invalid/pilot/windows.pdf",
+  "dataset_id": "",
+  "document_id": "",
+  "document": "КриптоПро CSP. Инструкция по использованию. Windows",
+  "version": "5.0 R4 KC1"
+}
