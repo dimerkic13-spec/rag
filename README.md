@@ -10,6 +10,7 @@
 - [Предварительная архитектура](docs/architecture.md) и [журнал решений](docs/DECISIONS.md)
 - [Правила работы Codex](AGENTS.md) и [журнал изменений](CHANGELOG.md)
 - [Реестр документации](docs/document-registry.md)
+- [Совместимость технологий](docs/compatibility.md) и команда офлайн-проверок `python scripts/check_offline.py`
 - [Шаблон локального окружения](.env.example)
 
 ## Как будет работать бот
