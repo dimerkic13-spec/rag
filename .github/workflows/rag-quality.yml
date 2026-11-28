@@ -1,0 +1,49 @@
+name: RAG quality
+on:
+  pull_request:
+  push:
+  schedule:
+    - cron: "40 6 * * 1"
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+jobs:
+  quality:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - run: python -m unittest discover -s tests/unit -v
+      - name: Offline coverage
+        run: python scripts/rag_quality.py --out quality-output
+      - name: Live quality run
+        if: (github.event_name == 'schedule' || github.event_name == 'workflow_dispatch') && github.ref_name == github.event.repository.default_branch && vars.RAG_LIVE_ENABLED == 'true'
+        env:
+          DIFY_API_KEY: ${{ secrets.DIFY_API_KEY }}
+          PILOT_CONFIG: ${{ secrets.RAG_PILOT_CONFIG_JSON }}
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -eu
+          if [[ -z "$DIFY_API_KEY" || -z "$PILOT_CONFIG" ]]; then
+            echo "::notice::Live check skipped because the stand configuration is incomplete"
+            exit 0
+          fi
+          umask 077
+          printf '%s' "$PILOT_CONFIG" > "$RUNNER_TEMP/pilot.json"
+          args=()
+          id=$(gh run list --workflow rag-quality.yml --branch "$GITHUB_REF_NAME" --status success --event schedule --limit 1 --json databaseId --jq '.[0].databaseId // empty')
+          if [[ -n "$id" ]] && gh run download "$id" -n quality-summary -D "$RUNNER_TEMP/baseline"; then
+            if python -c 'import json,sys;sys.exit(json.load(open(sys.argv[1]))["mode"]!="live")' "$RUNNER_TEMP/baseline/summary.json"; then
+              args=(--previous "$RUNNER_TEMP/baseline/summary.json")
+            fi
+          fi
+          python scripts/rag_quality.py --live-config "$RUNNER_TEMP/pilot.json" --out quality-output "${args[@]}"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: quality-summary
+          path: quality-output/
