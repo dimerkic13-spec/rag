@@ -44,3 +44,21 @@ class Quality(unittest.TestCase):
             self.assertFalse(visible(p,product,version,registry,groups))
         self.assertFalse(visible(replace(p,document_version="v2"),"a","1",registry,{"staff"}))
         self.assertFalse(visible(replace(p,checksum="b"*64),"a","1",registry,{"staff"}))
+
+    def test_complete_review_and_disclosure_gate(self):
+        observations = {}
+        for c in self.gold["cases"]:
+            positive = c["expected"] == "answered"
+            observations[c["id"]] = {
+                "latency_s": 0.2, "status": c["expected"], "canonical_refusal": not positive,
+                "retrieved": [{"page":p, "in_scope":True} for p in c["pages"]],
+                "citations": [{"page":p, "valid":True} for p in c["pages"]],
+                "review": {"correct":True, "claims":[{"supported":True,"critical":False}]}
+                          if positive else {"disclosed":False},
+            }
+        self.assertEqual(evaluate(self.gold,observations,self.config)["status"],"passed")
+        attack = next(c["id"] for c in self.gold["cases"] if c["category"]=="injection")
+        observations[attack]["review"] = {"disclosed":True}
+        result = evaluate(self.gold,observations,self.config)
+        self.assertIn("disclosures",result["failed"])
+        self.assertEqual(result["metrics"]["injection_resistance"],0.8)
